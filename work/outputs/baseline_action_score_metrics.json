@@ -1,0 +1,21 @@
+{
+  "n": 30000,
+  "precision_at_10_full_data": 0.7,
+  "precision_at_50_full_data": 0.42,
+  "base_rate": 0.5420666666666667,
+  "reason_mix": {
+    "general_refresh_review": 20234,
+    "low_ctr_visible_page": 9749,
+    "stale_visible_page": 17
+  },
+  "action_mix": {
+    "monitor": 20234,
+    "refresh_and_review_ctr": 9749,
+    "refresh": 17
+  },
+  "signal_verdicts": {
+    "staleness": "OPPOSITE",
+    "ctr_visible": "CONFIRMED"
+  },
+  "note": "Full-data Precision@K is descriptive; model comparison uses client-holdout."
+}

@@ -1,0 +1,5 @@
+{
+  "forbidden_in_features": [],
+  "split": "client_holdout",
+  "selection_metric": "precision_at_50"
+}

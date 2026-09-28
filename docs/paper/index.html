@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ranking Content for Refresh Review from Observable Search Signals — Yuan Andrei C. Mariano</title>
+<meta name="description" content="Decision-support ranking of content items for refresh review using anonymized search signals. Client-holdout validation vs a transparent baseline.">
+<link rel="canonical" href="https://yuan-mariano-works.netlify.app/ml/paper/">
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #1a1f2e;
+  --muted: #5a6472;
+  --line: #d8dde6;
+  --paper: #fbfaf7;
+  --accent: #0d3b66;
+  --band: #eef2f7;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font: 17px/1.65 "Source Serif 4", Georgia, serif;
+}
+a { color: var(--accent); }
+.wrap { max-width: 740px; margin: 0 auto; padding: 2.5rem 1.25rem 4rem; }
+.kicker {
+  font: 600 12px/1.4 "IBM Plex Sans", sans-serif;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 0.75rem;
+}
+h1 {
+  font: 700 2rem/1.25 "Source Serif 4", Georgia, serif;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.75rem;
+}
+.byline { font: 15px/1.5 "IBM Plex Sans", sans-serif; color: var(--muted); margin: 0 0 1.5rem; }
+.abstract {
+  background: var(--band);
+  border-left: 3px solid var(--accent);
+  padding: 1rem 1.15rem;
+  margin: 0 0 2rem;
+}
+.abstract h2 { margin: 0 0 0.5rem; font: 600 13px/1.3 "IBM Plex Sans", sans-serif; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+.abstract p { margin: 0; text-align: justify; }
+h2 {
+  font: 700 1.35rem/1.3 "Source Serif 4", Georgia, serif;
+  color: var(--accent);
+  margin: 2.25rem 0 0.75rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--line);
+}
+h3 { font: 600 1.05rem/1.35 "Source Serif 4", Georgia, serif; margin: 1.25rem 0 0.4rem; }
+p { margin: 0 0 0.9rem; text-align: justify; }
+ul, ol { margin: 0 0 1rem; padding-left: 1.35rem; }
+li { margin: 0.25rem 0; }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font: 14px/1.45 "IBM Plex Sans", sans-serif;
+  margin: 0.75rem 0 1.25rem;
+}
+th, td { border-bottom: 1px solid var(--line); padding: 0.45rem 0.5rem; text-align: left; }
+th { font-weight: 600; color: var(--muted); font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; font-family: "IBM Plex Mono", monospace; font-size: 13px; }
+.note { font: 14px/1.5 "IBM Plex Sans", sans-serif; color: var(--muted); margin: 0.25rem 0 1rem; }
+figure { margin: 1.25rem 0; }
+figure img, figure object { width: 100%; height: auto; background: #fff; border: 1px solid var(--line); }
+figcaption { font: 13px/1.45 "IBM Plex Sans", sans-serif; color: var(--muted); margin-top: 0.4rem; }
+.links { font: 14px/1.5 "IBM Plex Sans", sans-serif; }
+.ack { margin-top: 2.5rem; padding-top: 1rem; border-top: 2px solid var(--ink); font: 15px/1.55 "IBM Plex Sans", sans-serif; }
+@media (max-width: 600px) {
+  h1 { font-size: 1.55rem; }
+  body { font-size: 16px; }
+}
+</style>
+</head>
+<body>
+<article class="wrap">
+  <p class="kicker">FlyRank ML Internship · Research page · Refresh / Content Opportunity Scoring</p>
+  <h1>Ranking Content for Refresh Review from Observable Search Signals</h1>
+  <p class="byline">
+    Yuan Andrei C. Mariano · Computer Science, Specialization in Data Science<br>
+    Public repo: <a href="https://github.com/yuan05-afk/flyrank-ml-internship">github.com/yuan05-afk/flyrank-ml-internship</a>
+  </p>
+
+  <section class="abstract" aria-label="Abstract">
+    <h2>Abstract</h2>
+    <p>
+      Editors need a short, honest queue of which pages to refresh first.
+      Using a 30,000-row anonymized FlyRank starter snapshot (32 clients; trailing-90-day search and engagement metrics),
+      this work frames refresh prioritization as a ranking task with an observed decline label,
+      a transparent rule baseline, and client-holdout validation.
+      A random forest selected by Precision@50 reaches 0.74 on the holdout versus 0.24 for the baseline
+      (base rate ≈ 0.54; ROC-AUC ≈ 0.75).
+      The output is a ranked review queue with scores, actions, and reason codes for human triage,
+      not an automatic publishing decision or a claim about Google’s ranking algorithm.
+    </p>
+  </section>
+
+  <h2>1. Introduction / Problem</h2>
+  <p>
+    Content sites accumulate pages faster than editorial capacity. The decision this project supports is:
+    <em>which existing pages should an editor open for refresh review this week?</em>
+    The unit of analysis is one content item (page). The action is to prioritize rewrite or expansion effort.
+    A wrong call wastes rewrite hours (false positives) or leaves declining, still-visible pages untouched (false negatives).
+  </p>
+  <p>
+    A single threshold rule (for example, “stale and high impressions”) is a fair starting point and remains
+    the reason-code layer of the playbook. It is not enough when CTR gaps, thin depth, staleness, and visibility
+    interact differently across clients. Machine learning earns a place only if it beats that transparent baseline
+    on the same split and the same operational metric.
+  </p>
+
+  <h2>2. Data</h2>
+  <p>
+    <strong>Primary dataset:</strong> <code>data/raw/content_refresh_anonymized.csv</code> —
+    30,000 rows × 44 columns, one row per pseudonymized content item, 32 clients,
+    trailing-90-day aggregates. Full column meanings are in the repo data dictionary.
+  </p>
+  <p>
+    <strong>Warehouse (deferred):</strong> Hugging Face <code>FlyRank/internship-warehouse</code>
+    (~79M daily performance rows) was not queried in this environment (no HF token / gate access in the build machine).
+    The contract and notebooks are complete on the starter release; SETUP.md documents requesting warehouse access for panel extensions.
+  </p>
+  <p>
+    <strong>Excluded on purpose:</strong> <code>trend_direction</code> and <code>trend_pct</code> as features
+    (they define the decline label); <code>content_id</code> / <code>client_id</code> as features
+    (grouping and client-holdout only); any client names, URLs, or private queries (not present in the starter; never invented).
+  </p>
+  <p class="note">Gotchas respected: rate columns are ×100 percentages; <code>avg_position = 0</code> means missing rank, not rank zero.</p>
+
+  <h2>3. Methodology</h2>
+  <h3>3.1 Label</h3>
+  <p>
+    <code>is_declining_label</code> is an observed proxy: positive when <code>trend_direction</code> is <code>down</code>
+    in the snapshot. It is not an editorial ground truth and not a future sealed warehouse window.
+  </p>
+  <h3>3.2 Features</h3>
+  <p>
+    Numeric and categorical lists follow <code>scripts/ml_utils.py</code>
+    (impressions/clicks/sessions transforms, freshness, CTR, position, content tiers, and related categoricals).
+    Leakage hunt: forbidden fields do not appear in the model feature lists.
+  </p>
+  <h3>3.3 Baseline</h3>
+  <p>
+    Transparent score combining visibility (impressions rank), freshness risk (days since update),
+    and a CTR-gap flag on visible ranked pages. Emits a primary reason code and action label
+    (<code>refresh</code>, <code>refresh_and_review_ctr</code>, <code>monitor</code>).
+  </p>
+  <h3>3.4 Models and split</h3>
+  <p>
+    Logistic regression, decision tree, and random forest. Split: <strong>client-holdout</strong>
+    (entire clients held out for test). Selection metric: Precision@50.
+    Seeds fixed at 42 in experiment notebooks; reference pipeline via <code>python scripts/run_all.py</code>.
+  </p>
+
+  <h2>4. Results</h2>
+  <p>
+    On the client-holdout evaluation from the reference pipeline run:
+  </p>
+  <table>
+    <thead>
+      <tr><th>Model</th><th class="num">Precision@50</th><th class="num">ROC-AUC</th><th class="num">Avg precision</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>baseline_rules</td><td class="num">0.24</td><td class="num">0.627</td><td class="num">0.468</td></tr>
+      <tr><td>logistic_regression</td><td class="num">0.40</td><td class="num">0.700</td><td class="num">0.522</td></tr>
+      <tr><td>decision_tree</td><td class="num">0.62</td><td class="num">0.742</td><td class="num">0.575</td></tr>
+      <tr><td><strong>random_forest</strong></td><td class="num"><strong>0.74</strong></td><td class="num"><strong>0.750</strong></td><td class="num"><strong>0.618</strong></td></tr>
+    </tbody>
+  </table>
+  <p class="note">Base rate (declining label): ≈ 0.542. Precision@50 must be read next to that base rate and the baseline.</p>
+  <p>
+    Top RF importances are dominated by impression presence and volume, average position, and content age —
+    signals an editor already reasons about, reweighted jointly. Errors still happen: high-impression stable pages
+    can rank high (false positives); low-volume declines can be missed. That is why the playbook requires human review.
+  </p>
+  <figure>
+    <object type="image/svg+xml" data="charts/top_feature_importance.svg" aria-label="Top feature importance chart">Feature importance chart</object>
+    <figcaption>Figure 1. Top feature importances from the selected random forest (reference pipeline).</figcaption>
+  </figure>
+  <figure>
+    <object type="image/svg+xml" data="charts/action_mix.svg" aria-label="Action mix chart">Action mix chart</object>
+    <figcaption>Figure 2. Suggested action mix on the scored queue (decision-support labels, not auto-publish).</figcaption>
+  </figure>
+
+  <h2>5. Limitations and honest framing</h2>
+  <ul>
+    <li>Snapshot label, not a sealed future window from the warehouse panel.</li>
+    <li>Starter sample size; warehouse access deferred without HF credentials in this build.</li>
+    <li>No causal claim that refreshing recovers traffic — that needs an experiment design.</li>
+    <li>No claim of predicting Google’s algorithm.</li>
+    <li>Rate-scale and missingness gotchas can mislead naive feature engineering.</li>
+  </ul>
+
+  <h2>6. Ranked recommendations (action playbook)</h2>
+  <ol>
+    <li>Open high-confidence <code>refresh</code> / <code>refresh_and_review_ctr</code> rows first.</li>
+    <li>Verify on-page context; apply the no-go list (legal freezes, YMYL caution, no auto-publish).</li>
+    <li>Treat <code>monitor</code> as backlog, not rewrite fuel.</li>
+    <li>Retrain or freeze when holdout Precision@50 drifts toward the baseline across refreshes.</li>
+  </ol>
+  <p class="note">Full playbook notebook: <a href="https://github.com/yuan05-afk/flyrank-ml-internship/blob/main/work/notebooks/w07_action_playbook.ipynb">w07_action_playbook.ipynb</a></p>
+
+  <h2>7. Reproducibility</h2>
+  <p class="links">
+    Clone <a href="https://github.com/yuan05-afk/flyrank-ml-internship">the repo</a>, then:
+  </p>
+  <p><code>pip install -r requirements.txt</code><br>
+     <code>python scripts/run_all.py</code></p>
+  <p>
+    Assignment notebooks under <code>work/notebooks/</code> (w01–w07 + capstone) contain the framing,
+    contract, baseline, model comparison, validation audit, and playbook with executed outputs.
+    Metrics receipts: <code>outputs/model_results.json</code> and <code>work/outputs/*.json</code>.
+  </p>
+
+  <h2>8. Tell the story (demo cuts)</h2>
+  <h3>5-minute demo</h3>
+  <ol>
+    <li>Decision and cost of a wrong call (30s).</li>
+    <li>Data contract + leakage rule (60s).</li>
+    <li>Baseline vs RF Precision@50 with base rate (90s).</li>
+    <li>Top-3 queue rows: action, reasons, what would make them wrong (90s).</li>
+    <li>Limits + this page URL (30s).</li>
+  </ol>
+  <h3>Social cut</h3>
+  <p>
+    On 30k anonymized pages, a transparent refresh rule hit Precision@50 ≈ 0.24;
+    a random forest on the same client-holdout hit ≈ 0.74 (base rate ≈ 0.54).
+    Decision-support for editors — not a Google predictor.
+  </p>
+  <h3>Employer cut</h3>
+  <p>
+    Built a content refresh ranking system on FlyRank’s anonymized search starter dataset
+    with client-holdout validation, baseline comparison, an editor playbook, and this public research page.
+  </p>
+
+  <div class="ack">
+    <strong>Acknowledgments and data credit.</strong>
+    Built on the FlyRank ML Internship dataset —
+    <a href="https://flyrank.ai" target="_blank" rel="noopener noreferrer">https://flyrank.ai</a>.
+    Starter slice ships in the public internship repo; warehouse release is gated on Hugging Face.
+  </div>
+</article>
+</body>
+</html>

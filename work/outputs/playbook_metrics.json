@@ -1,0 +1,6 @@
+{
+  "best_model": "random_forest",
+  "precision_at_50": 0.74,
+  "baseline_precision_at_50": 0.24,
+  "base_rate": 0.5420666666666667
+}

@@ -1,0 +1,7 @@
+{
+  "rows": 30000,
+  "clients": 32,
+  "pct_down": 54.2,
+  "pct_stale_180_and_imp500": 0.1,
+  "median_avg_position_known": 11.4
+}

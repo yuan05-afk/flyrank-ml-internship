@@ -1,0 +1,14 @@
+{
+  "q1": {
+    "n_rows": 30000,
+    "n_content": 30000,
+    "n_clients": 32,
+    "grain_ok": true
+  },
+  "q3": {
+    "avg_position_zero_rows": 1205,
+    "pct_avg_position_zero": 4.02,
+    "impressions_last_30d_median": 139.0,
+    "impressions_prev_30d_median": 210.0
+  }
+}

@@ -1,0 +1,82 @@
+[
+  {
+    "rank": 1,
+    "action": "refresh_and_review_ctr",
+    "reason": "low_ctr_visible_page",
+    "score": 0.993,
+    "declining_label": 0,
+    "what_would_make_it_wrong": "Low CTR is expected for the query intent (navigational) or position is mismeasured (avg_position quirk)."
+  },
+  {
+    "rank": 2,
+    "action": "refresh",
+    "reason": "stale_visible_page",
+    "score": 0.992,
+    "declining_label": 1,
+    "what_would_make_it_wrong": "Page was intentionally frozen (legal/seasonal) or impressions are bot-inflated."
+  },
+  {
+    "rank": 3,
+    "action": "refresh_and_review_ctr",
+    "reason": "low_ctr_visible_page",
+    "score": 0.973,
+    "declining_label": 1,
+    "what_would_make_it_wrong": "Low CTR is expected for the query intent (navigational) or position is mismeasured (avg_position quirk)."
+  },
+  {
+    "rank": 4,
+    "action": "refresh",
+    "reason": "stale_visible_page",
+    "score": 0.957,
+    "declining_label": 1,
+    "what_would_make_it_wrong": "Page was intentionally frozen (legal/seasonal) or impressions are bot-inflated."
+  },
+  {
+    "rank": 5,
+    "action": "refresh_and_review_ctr",
+    "reason": "low_ctr_visible_page",
+    "score": 0.94,
+    "declining_label": 1,
+    "what_would_make_it_wrong": "Low CTR is expected for the query intent (navigational) or position is mismeasured (avg_position quirk)."
+  },
+  {
+    "rank": 6,
+    "action": "refresh_and_review_ctr",
+    "reason": "low_ctr_visible_page",
+    "score": 0.938,
+    "declining_label": 1,
+    "what_would_make_it_wrong": "Low CTR is expected for the query intent (navigational) or position is mismeasured (avg_position quirk)."
+  },
+  {
+    "rank": 7,
+    "action": "refresh_and_review_ctr",
+    "reason": "low_ctr_visible_page",
+    "score": 0.937,
+    "declining_label": 1,
+    "what_would_make_it_wrong": "Low CTR is expected for the query intent (navigational) or position is mismeasured (avg_position quirk)."
+  },
+  {
+    "rank": 8,
+    "action": "refresh_and_review_ctr",
+    "reason": "low_ctr_visible_page",
+    "score": 0.937,
+    "declining_label": 1,
+    "what_would_make_it_wrong": "Low CTR is expected for the query intent (navigational) or position is mismeasured (avg_position quirk)."
+  },
+  {
+    "rank": 9,
+    "action": "refresh_and_review_ctr",
+    "reason": "low_ctr_visible_page",
+    "score": 0.937,
+    "declining_label": 0,
+    "what_would_make_it_wrong": "Low CTR is expected for the query intent (navigational) or position is mismeasured (avg_position quirk)."
+  },
+  {
+    "rank": 10,
+    "action": "refresh_and_review_ctr",
+    "reason": "low_ctr_visible_page",
+    "score": 0.937,
+    "declining_label": 0,
+    "what_would_make_it_wrong": "Low CTR is expected for the query intent (navigational) or position is mismeasured (avg_position quirk)."
+  }
+]

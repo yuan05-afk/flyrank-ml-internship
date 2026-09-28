@@ -1,0 +1,5 @@
+{
+  "precision_at_50_floor": 0.4,
+  "baseline_to_beat": 0.24,
+  "retrain_if": "holdout Precision@50 within 0.05 of baseline for 2 consecutive monthly refreshes"
+}
