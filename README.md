@@ -12,17 +12,22 @@ When rewrite capacity is scarce, which existing pages should an editor open firs
 | All ML desks | [yuan-mariano-works.netlify.app/ml/](https://yuan-mariano-works.netlify.app/ml/) |
 | Capstone report (source) | [`work/capstone_report.md`](work/capstone_report.md) |
 
-<p align="center">
-  <a href="https://yuan-mariano-works.netlify.app/ml/paper/">
-    <img src="docs/readme/paper-hero.png" alt="Research paper hero: abstract and headline metrics" width="920" />
-  </a>
-</p>
-
-<p align="center">
-  <a href="https://yuan-mariano-works.netlify.app/ml/ml-08-modeling/">
-    <img src="docs/readme/desk-modeling.png" alt="Modeling desk: RF Precision@50 0.74 vs baseline 0.24" width="920" />
-  </a>
-</p>
+<table>
+  <tr>
+    <td align="center" width="50%" valign="top">
+      <p><strong>Research paper</strong><br /><sub>Abstract · framing · headline claim</sub></p>
+      <a href="https://yuan-mariano-works.netlify.app/ml/paper/">
+        <img src="docs/readme/paper-hero.png" alt="Research paper: Ranking Content for Refresh Review from Observable Search Signals" width="400" />
+      </a>
+    </td>
+    <td align="center" width="50%" valign="top">
+      <p><strong>Modeling desk</strong><br /><sub>RF selected · P@50 0.74 vs baseline 0.24</sub></p>
+      <a href="https://yuan-mariano-works.netlify.app/ml/ml-08-modeling/">
+        <img src="docs/readme/desk-modeling.png" alt="Modeling desk lane with RF metrics cards" width="400" />
+      </a>
+    </td>
+  </tr>
+</table>
 
 ---
 
@@ -38,11 +43,20 @@ Measured on the bundled anonymized starter snapshot (`data/raw/content_refresh_a
 | Random forest ROC-AUC | **0.75** | Ranking quality beyond the top-50 slice |
 | Lift vs baseline P@50 | **~3×** | Same data, same split, honest comparison |
 
-<p align="center">
-  <img src="docs/readme/desk-precision.png" alt="Precision@K chart: baseline rules vs random forest" width="920" />
-</p>
+<table>
+  <tr>
+    <td align="center" width="50%" valign="top">
+      <p><strong>Precision@K</strong><br /><sub>Baseline rules vs random forest</sub></p>
+      <img src="docs/readme/chart-precision.png" alt="Grouped bars: Precision at 20, 50, and 100 for baseline vs random forest" width="400" />
+    </td>
+    <td align="center" width="50%" valign="top">
+      <p><strong>Model comparison</strong><br /><sub>Precision@50 across candidates</sub></p>
+      <img src="docs/readme/chart-models.png" alt="Horizontal bars: baseline, logistic regression, decision tree, random forest Precision@50" width="400" />
+    </td>
+  </tr>
+</table>
 
-Full comparison from the reference pipeline (`outputs/model_report.md`):
+Full comparison from the reference pipeline ([`outputs/model_report.md`](outputs/model_report.md)):
 
 | Model | ROC AUC | Avg precision | Precision@50 | Recall | F1 |
 |---|---:|---:|---:|---:|---:|
@@ -59,7 +73,9 @@ Full comparison from the reference pipeline (`outputs/model_report.md`):
 
 Trend fields define the decline label. They are **not** used as features (leakage rule). Top random-forest importances:
 
-![Top model features](outputs/charts/top_feature_importance.svg)
+<p align="center">
+  <img src="outputs/charts/top_feature_importance.svg" alt="Top random-forest feature importances" width="560" />
+</p>
 
 | Feature | Importance | Intuition |
 |---|---:|---|
@@ -116,13 +132,16 @@ Source: [`outputs/refresh_queue_sample.csv`](outputs/refresh_queue_sample.csv).
 
 ### Action and confidence mix
 
-| Action mix | Confidence mix |
-|:---:|:---:|
-| ![Action mix](outputs/charts/action_mix.svg) | ![Confidence mix](outputs/charts/confidence_mix.svg) |
-
-| Top reason codes | Trend distribution |
-|:---:|:---:|
-| ![Reason codes](outputs/charts/top_reason_codes.svg) | ![Trend distribution](outputs/charts/trend_distribution.svg) |
+<table>
+  <tr>
+    <td align="center" width="50%"><sub>Action mix</sub><br /><img src="outputs/charts/action_mix.svg" alt="Action mix in ranked queue" width="360" /></td>
+    <td align="center" width="50%"><sub>Confidence mix</sub><br /><img src="outputs/charts/confidence_mix.svg" alt="Confidence mix in ranked queue" width="360" /></td>
+  </tr>
+  <tr>
+    <td align="center" width="50%"><sub>Top reason codes</sub><br /><img src="outputs/charts/top_reason_codes.svg" alt="Top reason codes" width="360" /></td>
+    <td align="center" width="50%"><sub>Trend distribution</sub><br /><img src="outputs/charts/trend_distribution.svg" alt="Trend distribution" width="360" /></td>
+  </tr>
+</table>
 
 ---
 
