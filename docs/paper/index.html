@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Ranking Content for Refresh Review from Observable Search Signals — Yuan Andrei C. Mariano</title>
+<title>Ranking Content for Refresh Review from Observable Search Signals  -  Yuan Andrei C. Mariano</title>
 <meta name="description" content="Decision-support ranking of content items for refresh review using anonymized search signals. Client-holdout validation vs a transparent baseline. RF Precision@50 0.74 vs 0.24.">
 <link rel="canonical" href="https://yuan-mariano-works.netlify.app/ml/paper/">
 <meta property="og:title" content="Ranking Content for Refresh Review from Observable Search Signals">
@@ -150,7 +150,7 @@ code { font-family: "IBM Plex Mono", monospace; font-size: 0.88em; }
 
   <h2>2. Data</h2>
   <p>
-    <strong>Primary dataset (executed release):</strong> <code>data/raw/content_refresh_anonymized.csv</code> —
+    <strong>Primary dataset (executed release):</strong> <code>data/raw/content_refresh_anonymized.csv</code>  - 
     30,000 rows × 44 columns, one row per pseudonymized content item, 32 clients,
     trailing-90-day aggregates. Full column meanings are in the repo data dictionary.
   </p>
@@ -224,7 +224,7 @@ code { font-family: "IBM Plex Mono", monospace; font-size: 0.88em; }
   <p class="note" style="text-align:center">Figure A. Precision@K on client-holdout: baseline rules vs selected random forest.</p>
 
   <p>
-    Top RF importances are dominated by impression presence and volume, average position, and content age —
+    Top RF importances are dominated by impression presence and volume, average position, and content age  - 
     signals an editor already reasons about, reweighted jointly. Errors still happen: high-impression stable pages
     can rank high (false positives); low-volume declines can be missed. That is why the playbook requires human review.
   </p>
@@ -234,7 +234,7 @@ code { font-family: "IBM Plex Mono", monospace; font-size: 0.88em; }
 
   <figure>
     <object type="image/svg+xml" data="charts/top_feature_importance.svg" aria-label="Top feature importance chart">Feature importance chart</object>
-    <figcaption>Figure 1. Pipeline SVG — top feature importances (reference run).</figcaption>
+    <figcaption>Figure 1. Pipeline SVG  -  top feature importances (reference run).</figcaption>
   </figure>
   <figure>
     <object type="image/svg+xml" data="charts/action_mix.svg" aria-label="Action mix chart">Action mix chart</object>
@@ -249,7 +249,7 @@ code { font-family: "IBM Plex Mono", monospace; font-size: 0.88em; }
     <li>Snapshot observed label, not a sealed future window from the warehouse panel.</li>
     <li>Starter sample size; warehouse access deferred without HF credentials in this build.</li>
     <li>Results are measured / directional under holdout; they are decision-support for triage, not causal proof.</li>
-    <li>No causal claim that refreshing recovers traffic — that needs an experiment design.</li>
+    <li>No causal claim that refreshing recovers traffic  -  that needs an experiment design.</li>
     <li>No claim of predicting Google’s algorithm.</li>
     <li>Rate-scale and missingness gotchas can mislead naive feature engineering.</li>
   </ul>
@@ -270,7 +270,7 @@ code { font-family: "IBM Plex Mono", monospace; font-size: 0.88em; }
   <p><code>pip install -r requirements.txt</code><br>
      <code>python scripts/run_all.py</code></p>
   <p>
-    Assignment notebooks under <code>work/notebooks/</code> (w01–w07 + capstone) contain the framing,
+    Assignment notebooks under <code>work/notebooks/</code> (w01-w07 + capstone) contain the framing,
     contract, baseline, model comparison, validation audit, and playbook with executed outputs.
     Metrics receipts: <code>outputs/model_results.json</code> and <code>work/outputs/*.json</code>.
     Showcase desks: <a href="https://yuan-mariano-works.netlify.app/#ml">yuan-mariano-works.netlify.app/#ml</a>.
@@ -289,7 +289,7 @@ code { font-family: "IBM Plex Mono", monospace; font-size: 0.88em; }
   <p>
     On 30k anonymized pages, a transparent refresh rule hit Precision@50 ≈ 0.24;
     a random forest on the same client-holdout hit ≈ 0.74 (base rate ≈ 0.54).
-    Decision-support for editors — not a Google predictor.
+    Decision-support for editors  -  not a Google predictor.
   </p>
   <h3>Employer cut</h3>
   <p>
@@ -299,7 +299,7 @@ code { font-family: "IBM Plex Mono", monospace; font-size: 0.88em; }
 
   <div class="ack">
     <strong>Acknowledgments and data credit.</strong>
-    Built on the FlyRank ML Internship dataset —
+    Built on the FlyRank ML Internship dataset  - 
     <a href="https://flyrank.ai" target="_blank" rel="noopener noreferrer">https://flyrank.ai</a>.
     Starter slice ships in the public internship repo; warehouse release is gated on Hugging Face.
   </div>

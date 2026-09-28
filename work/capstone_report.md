@@ -1,4 +1,4 @@
-# Capstone Report — Refresh / Content Opportunity Scoring
+# Capstone Report  -  Refresh / Content Opportunity Scoring
 
 - **Author:** Yuan Andrei C. Mariano
 - **Program:** Computer Science · Specialization in Data Science
@@ -75,7 +75,7 @@ Charts: `outputs/charts/*.svg` and live paper figures.
 
 - Snapshot observed label, not a sealed future warehouse window.
 - Starter sample; warehouse deferred without HF credentials.
-- Measured / directional / decision-support under holdout — not causal recovery proof.
+- Measured / directional / decision-support under holdout  -  not causal recovery proof.
 - No claim of predicting Google’s algorithm.
 - Rate-scale and missingness gotchas can mislead naive feature engineering.
 
@@ -95,10 +95,10 @@ pip install -r requirements.txt
 python scripts/run_all.py
 ```
 
-Notebooks: `work/notebooks/` (w01–w07 + `capstone.ipynb`) and starter `notebooks/01`, `02`.
+Notebooks: `work/notebooks/` (w01-w07 + `capstone.ipynb`) and starter `notebooks/01`, `02`.
 Receipts: `outputs/model_results.json`, `work/outputs/*.json`.
 Showcase desks: https://yuan-mariano-works.netlify.app/#ml
 
 ## 8. Acknowledgments and data credit
 
-Built on the FlyRank ML Internship dataset — https://flyrank.ai
+Built on the FlyRank ML Internship dataset  -  https://flyrank.ai
