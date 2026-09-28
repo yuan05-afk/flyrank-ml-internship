@@ -1,87 +1,112 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ranking Content for Refresh Review from Observable Search Signals — Yuan Andrei C. Mariano</title>
-<meta name="description" content="Decision-support ranking of content items for refresh review using anonymized search signals. Client-holdout validation vs a transparent baseline.">
+<meta name="description" content="Decision-support ranking of content items for refresh review using anonymized search signals. Client-holdout validation vs a transparent baseline. RF Precision@50 0.74 vs 0.24.">
 <link rel="canonical" href="https://yuan-mariano-works.netlify.app/ml/paper/">
-<link rel="icon" href="data:,">
+<meta property="og:title" content="Ranking Content for Refresh Review from Observable Search Signals">
+<meta property="og:description" content="RF Precision@50 0.74 vs baseline 0.24 on client-holdout. Decision-support for editors.">
+<meta property="og:image" content="./preview.png">
+<link rel="icon" href="https://yuan-mariano-works.netlify.app/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" defer></script>
+<script src="https://yuan-mariano-works.netlify.app/ml/desk.js" defer></script>
 <style>
 :root {
-  --ink: #1a1f2e;
+  --ink: #0e1621;
   --muted: #5a6472;
   --line: #d8dde6;
-  --paper: #fbfaf7;
-  --accent: #0d3b66;
-  --band: #eef2f7;
+  --paper: #f7f9fb;
+  --accent: #0d7377;
+  --accent-deep: #095456;
+  --band: #e6f2f2;
+  --slate: #1a2736;
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
 body {
-  background: var(--paper);
+  background:
+    radial-gradient(ellipse 80% 50% at 0% 0%, rgba(13,115,119,0.12), transparent 50%),
+    linear-gradient(180deg, #eef3f7, var(--paper));
   color: var(--ink);
   font: 17px/1.65 "Source Serif 4", Georgia, serif;
 }
-a { color: var(--accent); }
-.wrap { max-width: 740px; margin: 0 auto; padding: 2.5rem 1.25rem 4rem; }
+a { color: var(--accent-deep); }
+.topbar {
+  font: 500 13px/1.4 "IBM Plex Sans", sans-serif;
+  display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+  max-width: 740px; margin: 0 auto; padding: 1rem 1.25rem 0;
+}
+.topbar a { color: var(--muted); text-decoration: none; }
+.topbar a:hover { color: var(--accent); }
+.wrap { max-width: 740px; margin: 0 auto; padding: 1.5rem 1.25rem 4rem; }
 .kicker {
   font: 600 12px/1.4 "IBM Plex Sans", sans-serif;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin: 0 0 0.75rem;
+  letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin: 0 0 0.75rem;
 }
 h1 {
   font: 700 2rem/1.25 "Source Serif 4", Georgia, serif;
-  letter-spacing: -0.02em;
-  margin: 0 0 0.75rem;
+  letter-spacing: -0.02em; margin: 0 0 0.75rem;
 }
 .byline { font: 15px/1.5 "IBM Plex Sans", sans-serif; color: var(--muted); margin: 0 0 1.5rem; }
 .abstract {
-  background: var(--band);
-  border-left: 3px solid var(--accent);
-  padding: 1rem 1.15rem;
-  margin: 0 0 2rem;
+  background: var(--band); border-left: 3px solid var(--accent);
+  padding: 1rem 1.15rem; margin: 0 0 1.5rem;
 }
-.abstract h2 { margin: 0 0 0.5rem; font: 600 13px/1.3 "IBM Plex Sans", sans-serif; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+.abstract h2 { margin: 0 0 0.5rem; font: 600 13px/1.3 "IBM Plex Sans", sans-serif; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent-deep); }
 .abstract p { margin: 0; text-align: justify; }
+.metric-strip {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem;
+  margin: 0 0 2rem; font-family: "IBM Plex Sans", sans-serif;
+}
+.metric-strip div {
+  background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 0.7rem 0.8rem;
+}
+.metric-strip span { display: block; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.metric-strip strong { font: 600 1.25rem/1.2 "Space Grotesk", sans-serif; color: var(--accent-deep); font-variant-numeric: tabular-nums; }
 h2 {
   font: 700 1.35rem/1.3 "Source Serif 4", Georgia, serif;
-  color: var(--accent);
-  margin: 2.25rem 0 0.75rem;
-  padding-top: 0.5rem;
-  border-top: 1px solid var(--line);
+  color: var(--accent-deep); margin: 2.25rem 0 0.75rem; padding-top: 0.5rem; border-top: 1px solid var(--line);
 }
 h3 { font: 600 1.05rem/1.35 "Source Serif 4", Georgia, serif; margin: 1.25rem 0 0.4rem; }
 p { margin: 0 0 0.9rem; text-align: justify; }
 ul, ol { margin: 0 0 1rem; padding-left: 1.35rem; }
 li { margin: 0.25rem 0; }
 table {
-  width: 100%;
-  border-collapse: collapse;
-  font: 14px/1.45 "IBM Plex Sans", sans-serif;
-  margin: 0.75rem 0 1.25rem;
+  width: 100%; border-collapse: collapse;
+  font: 14px/1.45 "IBM Plex Sans", sans-serif; margin: 0.75rem 0 1.25rem;
 }
 th, td { border-bottom: 1px solid var(--line); padding: 0.45rem 0.5rem; text-align: left; }
 th { font-weight: 600; color: var(--muted); font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase; }
 td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; font-family: "IBM Plex Mono", monospace; font-size: 13px; }
+tr.best td { background: rgba(13,115,119,0.08); font-weight: 600; }
 .note { font: 14px/1.5 "IBM Plex Sans", sans-serif; color: var(--muted); margin: 0.25rem 0 1rem; }
 figure { margin: 1.25rem 0; }
-figure img, figure object { width: 100%; height: auto; background: #fff; border: 1px solid var(--line); }
+figure img, figure object { width: 100%; height: auto; background: #fff; border: 1px solid var(--line); border-radius: 6px; }
 figcaption { font: 13px/1.45 "IBM Plex Sans", sans-serif; color: var(--muted); margin-top: 0.4rem; }
+.chart-box { height: 280px; max-width: 640px; margin: 0.75rem auto 1rem; }
 .links { font: 14px/1.5 "IBM Plex Sans", sans-serif; }
+code { font-family: "IBM Plex Mono", monospace; font-size: 0.88em; }
 .ack { margin-top: 2.5rem; padding-top: 1rem; border-top: 2px solid var(--ink); font: 15px/1.55 "IBM Plex Sans", sans-serif; }
 @media (max-width: 600px) {
   h1 { font-size: 1.55rem; }
   body { font-size: 16px; }
+  .metric-strip { grid-template-columns: 1fr 1fr; }
 }
 </style>
 </head>
-<body>
+<body data-charts="precisionAtK:chartPak featureImportance:chartFeat actionMix:chartAct">
+<nav class="topbar" aria-label="Paper nav">
+  <a href="https://yuan-mariano-works.netlify.app/#ml">← Works · ML</a>
+  <span>
+    <a href="https://github.com/yuan05-afk/flyrank-ml-internship">Repo</a> ·
+    <a href="https://yuan-mariano-works.netlify.app/ml/ml-08-modeling/">Modeling desk</a>
+  </span>
+</nav>
 <article class="wrap">
   <p class="kicker">FlyRank ML Internship · Research page · Refresh / Content Opportunity Scoring</p>
   <h1>Ranking Content for Refresh Review from Observable Search Signals</h1>
@@ -93,22 +118,27 @@ figcaption { font: 13px/1.45 "IBM Plex Sans", sans-serif; color: var(--muted); m
   <section class="abstract" aria-label="Abstract">
     <h2>Abstract</h2>
     <p>
-      Editors need a short, honest queue of which pages to refresh first.
-      Using a 30,000-row anonymized FlyRank starter snapshot (32 clients; trailing-90-day search and engagement metrics),
-      this work frames refresh prioritization as a ranking task with an observed decline label,
-      a transparent rule baseline, and client-holdout validation.
-      A random forest selected by Precision@50 reaches 0.74 on the holdout versus 0.24 for the baseline
-      (base rate ≈ 0.54; ROC-AUC ≈ 0.75).
-      The output is a ranked review queue with scores, actions, and reason codes for human triage,
-      not an automatic publishing decision or a claim about Google’s ranking algorithm.
+      Which existing pages should an editor open for refresh review first when rewrite capacity is scarce?
+      Using FlyRank’s 30,000-row anonymized starter snapshot (32 clients; trailing-90-day search and engagement metrics),
+      this project frames the decision as a ranking task with an observed decline label, a transparent rule baseline, and client-holdout validation.
+      Models are fit without titles, URLs, client names, or private queries, and without using trend fields as features.
+      A random forest selected by Precision@50 reaches 0.74 on the holdout versus 0.24 for the baseline (base rate ≈ 0.54; ROC-AUC ≈ 0.75).
+      The shipped output is a ranked review queue with scores, actions, and reason codes for human triage, not an automatic publish decision and not a claim about Google’s ranking algorithm.
     </p>
   </section>
+
+  <div class="metric-strip" aria-label="Headline metrics">
+    <div><span>RF Precision@50</span><strong>0.74</strong></div>
+    <div><span>Baseline P@50</span><strong>0.24</strong></div>
+    <div><span>Base rate</span><strong>~0.54</strong></div>
+    <div><span>Split</span><strong>holdout</strong></div>
+  </div>
 
   <h2>1. Introduction / Problem</h2>
   <p>
     Content sites accumulate pages faster than editorial capacity. The decision this project supports is:
     <em>which existing pages should an editor open for refresh review this week?</em>
-    The unit of analysis is one content item (page). The action is to prioritize rewrite or expansion effort.
+    The unit of analysis is one content item (page). The action is to prioritize rewrite, CTR review, or expansion effort.
     A wrong call wastes rewrite hours (false positives) or leaves declining, still-visible pages untouched (false negatives).
   </p>
   <p>
@@ -120,44 +150,56 @@ figcaption { font: 13px/1.45 "IBM Plex Sans", sans-serif; color: var(--muted); m
 
   <h2>2. Data</h2>
   <p>
-    <strong>Primary dataset:</strong> <code>data/raw/content_refresh_anonymized.csv</code> —
+    <strong>Primary dataset (executed release):</strong> <code>data/raw/content_refresh_anonymized.csv</code> —
     30,000 rows × 44 columns, one row per pseudonymized content item, 32 clients,
     trailing-90-day aggregates. Full column meanings are in the repo data dictionary.
   </p>
   <p>
-    <strong>Warehouse (deferred):</strong> Hugging Face <code>FlyRank/internship-warehouse</code>
-    (~79M daily performance rows) was not queried in this environment (no HF token / gate access in the build machine).
-    The contract and notebooks are complete on the starter release; SETUP.md documents requesting warehouse access for panel extensions.
+    <strong>Windows and grain:</strong> Metrics are trailing-90-day rollups on the starter snapshot (not a sealed multi-period warehouse panel).
+    Grain checks confirm one row per content item and 32 distinct client IDs (<code>work/outputs/w03_contract_checks.json</code>).
+  </p>
+  <p>
+    <strong>Warehouse (deferred, honest):</strong> Hugging Face <code>FlyRank/internship-warehouse</code>
+    (~79M daily performance rows) was not queried in this environment (no HF token / gate access on the build machine).
+    The contract and notebooks are complete on the starter release; SETUP.md documents requesting warehouse access for future panel extensions.
+    This paper does not pretend warehouse rows were used.
   </p>
   <p>
     <strong>Excluded on purpose:</strong> <code>trend_direction</code> and <code>trend_pct</code> as features
     (they define the decline label); <code>content_id</code> / <code>client_id</code> as features
-    (grouping and client-holdout only); any client names, URLs, or private queries (not present in the starter; never invented).
+    (grouping and client-holdout only); any client names, URLs, domains, or private queries (not present in the starter; never invented).
   </p>
-  <p class="note">Gotchas respected: rate columns are ×100 percentages; <code>avg_position = 0</code> means missing rank, not rank zero.</p>
+  <p class="note">Gotchas respected: rate columns are ×100 percentages; <code>avg_position = 0</code> means missing rank (~4.02% of rows), not rank zero.</p>
 
   <h2>3. Methodology</h2>
-  <h3>3.1 Label</h3>
+  <h3>3.1 Assumptions</h3>
+  <ul>
+    <li>Editors can review a short weekly queue; Precision@K matters more than global accuracy.</li>
+    <li>An observed decline proxy is acceptable for prioritization research when labeled honestly.</li>
+    <li>Client-holdout approximates deployment to unseen clients better than a random row split.</li>
+  </ul>
+  <h3>3.2 Label</h3>
   <p>
     <code>is_declining_label</code> is an observed proxy: positive when <code>trend_direction</code> is <code>down</code>
-    in the snapshot. It is not an editorial ground truth and not a future sealed warehouse window.
+    in the snapshot (base rate ≈ 0.542). It is not an editorial ground truth and not a future sealed warehouse window.
   </p>
-  <h3>3.2 Features</h3>
+  <h3>3.3 Features</h3>
   <p>
     Numeric and categorical lists follow <code>scripts/ml_utils.py</code>
-    (impressions/clicks/sessions transforms, freshness, CTR, position, content tiers, and related categoricals).
-    Leakage hunt: forbidden fields do not appear in the model feature lists.
+    (impressions/clicks/sessions transforms, freshness, CTR, position, content tiers, and related categoricals; 52 engineered columns after encoding).
+    Leakage hunt: forbidden trend fields do not appear in the model feature lists (<code>work/outputs/w06_leakage_audit.json</code>).
   </p>
-  <h3>3.3 Baseline</h3>
+  <h3>3.4 Baseline</h3>
   <p>
     Transparent score combining visibility (impressions rank), freshness risk (days since update),
     and a CTR-gap flag on visible ranked pages. Emits a primary reason code and action label
     (<code>refresh</code>, <code>refresh_and_review_ctr</code>, <code>monitor</code>).
+    Signal audit: CTR-on-visible pages aligns with decline; pure staleness alone does not.
   </p>
-  <h3>3.4 Models and split</h3>
+  <h3>3.5 Models, validation, leakage</h3>
   <p>
     Logistic regression, decision tree, and random forest. Split: <strong>client-holdout</strong>
-    (entire clients held out for test). Selection metric: Precision@50.
+    (entire clients held out for test; train 27,675 / test 2,325). Selection metric: Precision@50.
     Seeds fixed at 42 in experiment notebooks; reference pipeline via <code>python scripts/run_all.py</code>.
   </p>
 
@@ -167,34 +209,46 @@ figcaption { font: 13px/1.45 "IBM Plex Sans", sans-serif; color: var(--muted); m
   </p>
   <table>
     <thead>
-      <tr><th>Model</th><th class="num">Precision@50</th><th class="num">ROC-AUC</th><th class="num">Avg precision</th></tr>
+      <tr><th>Model</th><th class="num">Precision@50</th><th class="num">P@20</th><th class="num">P@100</th><th class="num">ROC-AUC</th><th class="num">Avg precision</th></tr>
     </thead>
     <tbody>
-      <tr><td>baseline_rules</td><td class="num">0.24</td><td class="num">0.627</td><td class="num">0.468</td></tr>
-      <tr><td>logistic_regression</td><td class="num">0.40</td><td class="num">0.700</td><td class="num">0.522</td></tr>
-      <tr><td>decision_tree</td><td class="num">0.62</td><td class="num">0.742</td><td class="num">0.575</td></tr>
-      <tr><td><strong>random_forest</strong></td><td class="num"><strong>0.74</strong></td><td class="num"><strong>0.750</strong></td><td class="num"><strong>0.618</strong></td></tr>
+      <tr><td>baseline_rules</td><td class="num">0.24</td><td class="num">0.15</td><td class="num">0.36</td><td class="num">0.627</td><td class="num">0.468</td></tr>
+      <tr><td>logistic_regression</td><td class="num">0.40</td><td class="num">0.35</td><td class="num">0.44</td><td class="num">0.700</td><td class="num">0.522</td></tr>
+      <tr><td>decision_tree</td><td class="num">0.62</td><td class="num">0.55</td><td class="num">0.60</td><td class="num">0.742</td><td class="num">0.575</td></tr>
+      <tr class="best"><td>random_forest</td><td class="num">0.74</td><td class="num">0.65</td><td class="num">0.72</td><td class="num">0.750</td><td class="num">0.618</td></tr>
     </tbody>
   </table>
   <p class="note">Base rate (declining label): ≈ 0.542. Precision@50 must be read next to that base rate and the baseline.</p>
+
+  <div class="chart-box"><canvas id="chartPak" aria-label="Precision at K baseline vs RF"></canvas></div>
+  <p class="note" style="text-align:center">Figure A. Precision@K on client-holdout: baseline rules vs selected random forest.</p>
+
   <p>
     Top RF importances are dominated by impression presence and volume, average position, and content age —
     signals an editor already reasons about, reweighted jointly. Errors still happen: high-impression stable pages
     can rank high (false positives); low-volume declines can be missed. That is why the playbook requires human review.
   </p>
+
+  <div class="chart-box" style="height:320px"><canvas id="chartFeat" aria-label="Feature importance"></canvas></div>
+  <p class="note" style="text-align:center">Figure B. Top feature importances from the selected random forest.</p>
+
   <figure>
     <object type="image/svg+xml" data="charts/top_feature_importance.svg" aria-label="Top feature importance chart">Feature importance chart</object>
-    <figcaption>Figure 1. Top feature importances from the selected random forest (reference pipeline).</figcaption>
+    <figcaption>Figure 1. Pipeline SVG — top feature importances (reference run).</figcaption>
   </figure>
   <figure>
     <object type="image/svg+xml" data="charts/action_mix.svg" aria-label="Action mix chart">Action mix chart</object>
     <figcaption>Figure 2. Suggested action mix on the scored queue (decision-support labels, not auto-publish).</figcaption>
   </figure>
 
+  <div class="chart-box"><canvas id="chartAct" aria-label="Action mix doughnut"></canvas></div>
+  <p class="note" style="text-align:center">Figure C. Interactive action mix (same reference queue counts).</p>
+
   <h2>5. Limitations and honest framing</h2>
   <ul>
-    <li>Snapshot label, not a sealed future window from the warehouse panel.</li>
+    <li>Snapshot observed label, not a sealed future window from the warehouse panel.</li>
     <li>Starter sample size; warehouse access deferred without HF credentials in this build.</li>
+    <li>Results are measured / directional under holdout; they are decision-support for triage, not causal proof.</li>
     <li>No causal claim that refreshing recovers traffic — that needs an experiment design.</li>
     <li>No claim of predicting Google’s algorithm.</li>
     <li>Rate-scale and missingness gotchas can mislead naive feature engineering.</li>
@@ -202,7 +256,7 @@ figcaption { font: 13px/1.45 "IBM Plex Sans", sans-serif; color: var(--muted); m
 
   <h2>6. Ranked recommendations (action playbook)</h2>
   <ol>
-    <li>Open high-confidence <code>refresh</code> / <code>refresh_and_review_ctr</code> rows first.</li>
+    <li>Open high-confidence <code>refresh</code> / <code>refresh_and_review_ctr</code> rows first (3,602 high-confidence items in the reference queue).</li>
     <li>Verify on-page context; apply the no-go list (legal freezes, YMYL caution, no auto-publish).</li>
     <li>Treat <code>monitor</code> as backlog, not rewrite fuel.</li>
     <li>Retrain or freeze when holdout Precision@50 drifts toward the baseline across refreshes.</li>
@@ -219,6 +273,7 @@ figcaption { font: 13px/1.45 "IBM Plex Sans", sans-serif; color: var(--muted); m
     Assignment notebooks under <code>work/notebooks/</code> (w01–w07 + capstone) contain the framing,
     contract, baseline, model comparison, validation audit, and playbook with executed outputs.
     Metrics receipts: <code>outputs/model_results.json</code> and <code>work/outputs/*.json</code>.
+    Showcase desks: <a href="https://yuan-mariano-works.netlify.app/#ml">yuan-mariano-works.netlify.app/#ml</a>.
   </p>
 
   <h2>8. Tell the story (demo cuts)</h2>
