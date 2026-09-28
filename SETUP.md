@@ -81,6 +81,8 @@ The full warehouse (~79M rows) is hosted on Hugging Face behind a click-through 
 
 **✅ Done when:** the first cells of Notebook 03 print the table row counts.
 
+**Yuan status (2026-09-29):** HF warehouse/lanes still gated. Automated browser signup could not set the password field or complete email verification. Follow the exact unlock steps in `../HF_ACCESS.md` (sibling folder under `Machine Learning/`), then re-run `notebooks/03_working_with_the_full_release.ipynb`.
+
 ---
 
 ## The one-account rule (saves an hour of confusion)
